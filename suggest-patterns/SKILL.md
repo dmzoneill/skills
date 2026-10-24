@@ -14,17 +14,21 @@ None. Runs analysis on existing failure data.
 ## Workflow
 
 ### 1. Load Existing Patterns
+
 - `memory_read("learned/patterns")` — existing error_patterns
 - Count existing, list pattern names
 
 ### 2. Mine Patterns from Failures
+
 - Read `memory/learned/tool_failures.yaml`
 - Or use `scripts/pattern_miner.py` if available: `mine_patterns_from_failures()`
 - Group similar errors, suggest when frequency ≥ 5
 - Output: pattern, frequency, recommended_category, tools, example errors
 
 ### 3. Build Output
+
 For each suggestion (top 10):
+
 - Pattern name
 - Frequency
 - Recommended category
@@ -35,6 +39,7 @@ For each suggestion (top 10):
 If no suggestions: "No new patterns to suggest! All common errors (5+) already captured."
 
 ### 4. Log
+
 - `memory_session_log("Ran pattern discovery", "Found X new patterns, existing: Y")`
 
 ## Key MCP Tools

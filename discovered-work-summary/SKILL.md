@@ -9,28 +9,32 @@ Generates daily/weekly summaries of discovered work items. Run `sync_discovered_
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `period` | string | "daily" | "daily" (1 day), "weekly" (7 days), or number of days |
-| `include_pending` | bool | true | Include items not yet synced to Jira |
-| `include_synced` | bool | true | Include items already synced |
-| `format` | string | "markdown" | "markdown", "slack", "brief" |
+| Input             | Type   | Default    | Purpose                                               |
+| ----------------- | ------ | ---------- | ----------------------------------------------------- |
+| `period`          | string | "daily"    | "daily" (1 day), "weekly" (7 days), or number of days |
+| `include_pending` | bool   | true       | Include items not yet synced to Jira                  |
+| `include_synced`  | bool   | true       | Include items already synced                          |
+| `format`          | string | "markdown" | "markdown", "slack", "brief"                          |
 
 ## Workflow
 
 ### 1. Load Data
+
 - Compute period days (daily=1, weekly=7, or parse number)
 - Load discovered work from memory: `get_discovered_work_for_period(days)`, `get_discovered_work_summary()` (via memory/scripts)
 
 ### 2. Analyze Trends
+
 - Daily average, most common type, busiest day
 - Sync rate (synced/total), pending backlog
 
 ### 3. Build Summary
+
 - **Markdown/Slack**: Header, Quick Stats, Jira Issues Created, By Type, By Day, Pending items, Insights
 - **Brief**: One-line "Discovered: X | Synced: Y | Pending: Z"
 
 ### 4. Log Session
+
 - `memory_session_log("Generated discovered work summary", "Period: ... Items: ...")`
 
 ## Output

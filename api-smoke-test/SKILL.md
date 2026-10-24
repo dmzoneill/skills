@@ -9,27 +9,31 @@ Verify API availability and performance. Validates deploy_to_ephemeral and relea
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `base_url` | string | required | Base URL (e.g., https://api.example.com) |
-| `environment` | string | stage | stage, production, ephemeral |
-| `auth_token` | string | "" | Bearer token for auth endpoints |
-| `fail_on_slow` | bool | false | Fail if response > threshold |
+| Input          | Type   | Default  | Purpose                                    |
+| -------------- | ------ | -------- | ------------------------------------------ |
+| `base_url`     | string | required | Base URL (e.g., `https://api.example.com`) |
+| `environment`  | string | stage    | stage, production, ephemeral               |
+| `auth_token`   | string | ""       | Bearer token for auth endpoints            |
+| `fail_on_slow` | bool   | false    | Fail if response > threshold               |
 
 ## Workflow
 
 ### 1. Load Persona
+
 - `persona_load("developer")`
 
 ### 2. Check Known Issues
+
 - `check_known_issues("curl", "")`
 - `check_known_issues("api", "")`
 
 ### 3. TLS Check
+
 - `openssl_s_client(host="{{ base_url }}")` — verify TLS
 - Parse: "verify return code: 0" → ok, extract TLS version
 
 ### 4. HTTP Endpoint Checks
+
 - `curl_get(url="{{ base_url }}/")` — root
 - `curl_get(url="{{ base_url }}/health")` — health
 - `curl_head(url="{{ base_url }}/")`
@@ -40,25 +44,28 @@ Verify API availability and performance. Validates deploy_to_ephemeral and relea
 - `curl_delete(url="{{ base_url }}/api/v1/ping")` — if endpoint exists
 
 ### 5. Parse Results
+
 - HTTP status 200–499 → pass
 - Timing: total > 2s → slow
 - Count passed/total endpoints
 
 ### 6. Failure Learning
+
 - "could not resolve" → `learn_tool_fix("curl_get", "could not resolve", "DNS resolution failed", "Verify hostname and DNS")`
 - "connection refused" → service not running
 - "no route to host" → `vpn_connect()` for internal APIs
 
 ### 7. Memory
+
 - `memory_session_log("API smoke test on {{ base_url }}", "environment={{ environment }}, passed=X/Y")`
 
 ## Error Recovery
 
-| Error | Action |
-|-------|--------|
-| "could not resolve" | Verify hostname, DNS |
-| "connection refused" | Check API service running |
-| "no route to host" | `vpn_connect()` for internal APIs |
+| Error                | Action                            |
+| -------------------- | --------------------------------- |
+| "could not resolve"  | Verify hostname, DNS              |
+| "connection refused" | Check API service running         |
+| "no route to host"   | `vpn_connect()` for internal APIs |
 
 ## Output
 

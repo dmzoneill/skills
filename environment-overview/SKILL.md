@@ -9,17 +9,19 @@ Comprehensive environment health check for stage, production, or ephemeral.
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `namespace` | string | required | Kubernetes namespace |
-| `environment` | string | stage | stage, production, ephemeral |
+| Input         | Type   | Default  | Purpose                      |
+| ------------- | ------ | -------- | ---------------------------- |
+| `namespace`   | string | required | Kubernetes namespace         |
+| `environment` | string | stage    | stage, production, ephemeral |
 
 ## Workflow
 
 ### 1. Load Persona
+
 - `persona_load("devops")`
 
 ### 2. K8s Queries
+
 - `k8s_environment_summary(environment="{{ environment }}")`
 - `k8s_namespace_health(namespace="{{ namespace }}", environment="{{ environment }}")`
 - `kubectl_get_services(namespace="{{ namespace }}", environment="{{ environment }}")`
@@ -29,18 +31,22 @@ Comprehensive environment health check for stage, production, or ephemeral.
 - `kubectl_get_events(namespace="{{ namespace }}", environment="{{ environment }}")` — warning events
 
 ### 3. Prometheus (optional)
+
 - `prometheus_check_health(namespace="{{ namespace }}", environment="{{ environment }}")`
 
 ### 4. Parse & Analyze
+
 - Pod counts: Running, Pending, Failed
 - High CPU/memory pods
 - Warning events (error, failed, backoff, unhealthy)
 
 ### 5. Error Recovery
+
 - "unauthorized" → `kube_login(cluster="stage" or "prod")`
 - "no route to host" → `vpn_connect()`
 
 ### 6. Memory
+
 - `memory_session_log("Checked environment overview", "namespace={{ namespace }}, healthy={{ healthy }}")`
 
 ## Output

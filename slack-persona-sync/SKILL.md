@@ -9,19 +9,21 @@ Sync Slack messages to vector database for persona semantic search.
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `mode` | string | incremental | full or incremental |
-| `months` | int | 48 | Time window for full sync |
-| `days` | int | 1 | Days for incremental |
-| `include_threads` | bool | true | Include thread replies |
+| Input             | Type   | Default     | Purpose                   |
+| ----------------- | ------ | ----------- | ------------------------- |
+| `mode`            | string | incremental | full or incremental       |
+| `months`          | int    | 48          | Time window for full sync |
+| `days`            | int    | 1           | Days for incremental      |
+| `include_threads` | bool   | true        | Include thread replies    |
 
 ## Workflow
 
 ### 1. Run Sync
+
 - `slack_persona_sync(mode=inputs.mode, months=inputs.months, days=inputs.days, include_threads=inputs.include_threads)`
 
 ### 2. Log
+
 - `memory_session_log("Slack persona sync complete", "Mode: {mode}")`
 
 ## MCP Tools

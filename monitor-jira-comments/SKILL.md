@@ -9,30 +9,34 @@ Scheduled skill that checks active sprint issues for new comments, detects quest
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `jira_project` | string | "AAP" | Jira project key |
-| `hours_lookback` | int | 24 | Hours to check for new comments |
-| `notify_user` | bool | true | Notify via Slack |
-| `slack_channel` | string | "" | Channel (default: team-automation-analytics) |
-| `dry_run` | bool | false | Report only, don't post responses |
+| Input            | Type   | Default | Purpose                                      |
+| ---------------- | ------ | ------- | -------------------------------------------- |
+| `jira_project`   | string | "AAP"   | Jira project key                             |
+| `hours_lookback` | int    | 24      | Hours to check for new comments              |
+| `notify_user`    | bool   | true    | Notify via Slack                             |
+| `slack_channel`  | string | ""      | Channel (default: team-automation-analytics) |
+| `dry_run`        | bool   | false   | Report only, don't post responses            |
 
 ## Workflow
 
 ### 1. Load Persona
+
 - `persona_load("developer")`
 
 ### 2. Search Sprint Issues
+
 - `jira_search(jql="project = AAP AND Sprint in openSprints() AND assignee = currentUser() ORDER BY updated DESC", max_results=50)`
 - Parse issue keys from result
 
 ### 3. For Each Issue
+
 - `jira_view_issue(issue_key)` — get issue details and comments
 - Parse comments from issue text
 - Detect questions: `?`, "can you", "could you", "please clarify", "what about", "status on", "feedback", etc.
 - Skip own comments ("merge request ready", "working on", etc.)
 
 ### 4. Generate Response
+
 - Status/update → "Thanks for checking in! I'm actively working..."
 - Clarify/explain → "Good question - let me clarify..."
 - When/timeline → "I'm targeting to have this ready soon..."
@@ -40,12 +44,15 @@ Scheduled skill that checks active sprint issues for new comments, detects quest
 - Default → "Thanks for reaching out! I've seen your message..."
 
 ### 5. Post Response (unless dry_run)
+
 - `jira_add_comment(issue_key, comment)`
 
 ### 6. Notify User
+
 - `notify_team(message="New question on AAP-XXX - responded", channel=..., type="info")`
 
 ### 7. Log
+
 - `memory_session_log("jira_comment_monitoring", "Checked X issues, found Y questions")`
 
 ## Output

@@ -11,17 +11,17 @@ Gather and present an end-of-day summary. Load developer persona first; switch t
 
 ## Inputs
 
-| Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `generate_standup` | bool | `true` | Generate standup notes for tomorrow |
-| `cleanup_prompts` | bool | `true` | Show cleanup reminders (branches, ephemeral) |
-| `slack_format` | bool | `false` | Use Slack link format in output |
+| Input              | Type | Default | Description                                  |
+| ------------------ | ---- | ------- | -------------------------------------------- |
+| `generate_standup` | bool | `true`  | Generate standup notes for tomorrow          |
+| `cleanup_prompts`  | bool | `true`  | Show cleanup reminders (branches, ephemeral) |
+| `slack_format`     | bool | `false` | Use Slack link format in output              |
 
 ## Workflow
 
 ### 1. Setup
 
-```
+```text
 persona_load("developer")
 knowledge_query(project="automation-analytics-backend", persona="developer", section="gotchas")
 check_known_issues(tool_name="gitlab_mr_list")
@@ -38,7 +38,7 @@ Use local time (Europe/Dublin):
 
 ### 3. Today's Wins
 
-```
+```text
 git_log(repo="automation-analytics-backend", author="@me", since="today", limit=20)
 ```
 
@@ -46,7 +46,7 @@ Parse commits for Today's Wins section.
 
 ### 4. Merged Today
 
-```
+```text
 gitlab_mr_list(project="automation-analytics/automation-analytics-backend", state="merged")
 ```
 
@@ -54,7 +54,7 @@ Filter for today's merges (weekends: show "No MRs merged" message).
 
 ### 5. Weekly Stats
 
-```
+```text
 git_log(repo="automation-analytics-backend", author="@me", since="1 week ago", limit=100, oneline=true)
 git_log(repo="automation-analytics-backend", author="@me", since="1 week ago", limit=100, numstat=true)
 ```
@@ -65,7 +65,7 @@ Parse numstat for lines added/removed; count commits.
 
 Check both repos:
 
-```
+```text
 git_status(repo="automation-analytics-backend")
 git_status(repo="redhat-ai-workflow")
 ```
@@ -74,7 +74,7 @@ Include modified files in the Uncommitted Work section.
 
 ### 7. Open PRs
 
-```
+```text
 gitlab_mr_list(project="automation-analytics/automation-analytics-backend", author="@me")
 ```
 
@@ -82,7 +82,7 @@ Indicate draft vs active.
 
 ### 8. Tomorrow's Calendar
 
-```
+```text
 google_calendar_list_events(days=2)
 ```
 
@@ -92,7 +92,7 @@ Parse for tomorrow's events. Mark early meetings (before 10:00).
 
 Switch to devops:
 
-```
+```text
 persona_load("devops")
 bonfire_namespace_list(mine=true)
 ```
@@ -101,7 +101,7 @@ Parse namespaces; note expiring ones.
 
 Switch back for branches:
 
-```
+```text
 persona_load("developer")
 git_branch_list(repo="automation-analytics-backend", merged="main")
 ```
@@ -116,7 +116,7 @@ Read from `memory_read("state/current_work")` → `follow_ups` list.
 
 Template:
 
-```
+```text
 **Yesterday:**
 - [commits from today, or "(no commits today)"]
 
@@ -129,18 +129,19 @@ Template:
 
 ### 12. Memory Updates
 
-```
+```text
 memory_session_log("End of day wrap-up (beer)", "Commits: N, PRs: M")
 ```
 
 Update `state/current_work`:
+
 - `last_beer`: now
 - `daily_summaries`: append today's stats (commits, open_prs, merged_today, uncommitted_repos)
 - Keep last 30 days
 
 If standup generated:
 
-```
+```text
 memory_update("state/shared_context", "prepared_standup", {date, notes, generated_at})
 ```
 
@@ -148,7 +149,7 @@ memory_update("state/shared_context", "prepared_standup", {date, notes, generate
 
 If `stale_branches` found and `cleanup_prompts`:
 
-```
+```text
 skill_run("cleanup_branches", '{"dry_run": true}')
 ```
 
@@ -173,31 +174,31 @@ skill_run("cleanup_branches", '{"dry_run": true}')
 
 ## Error Handling
 
-| Error | Pattern | Action |
-|-------|---------|--------|
-| GitLab | "no such host" | `learn_tool_fix("gitlab_mr_list", "no such host", "VPN not connected", "Run vpn_connect()")` |
-| Calendar | "oauth" / "token" | `learn_tool_fix("google_calendar_list_events", "oauth token", "Token expired", "Run setup-gmail to refresh")` |
-| Bonfire | "no route to host" | `learn_tool_fix("bonfire_namespace_list", "no route to host", "VPN not connected", "Run vpn_connect() and kube_login('ephemeral')")` |
+| Error    | Pattern            | Action                                                                                                                               |
+| -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| GitLab   | "no such host"     | `learn_tool_fix("gitlab_mr_list", "no such host", "VPN not connected", "Run vpn_connect()")`                                         |
+| Calendar | "oauth" / "token"  | `learn_tool_fix("google_calendar_list_events", "oauth token", "Token expired", "Run setup-gmail to refresh")`                        |
+| Bonfire  | "no route to host" | `learn_tool_fix("bonfire_namespace_list", "no route to host", "VPN not connected", "Run vpn_connect() and kube_login('ephemeral')")` |
 
 If `check_known_issues` returns fixes, apply them before retrying.
 
 ## MCP Tools
 
-| Tool | Purpose |
-|------|---------|
-| `persona_load` | developer → devops (ephemeral) → developer |
-| `knowledge_query` | Project gotchas |
-| `check_known_issues` | gitlab_mr_list, google_calendar_list_events |
-| `git_log` | Today's commits, weekly stats (oneline, numstat) |
-| `git_status` | automation-analytics-backend, redhat-ai-workflow |
-| `git_branch_list` | Branches merged into main |
-| `gitlab_mr_list` | Merged PRs, my open PRs |
-| `bonfire_namespace_list` | Ephemeral namespaces (mine) |
-| `google_calendar_list_events` | Tomorrow's schedule (days=2) |
-| `memory_session_log` | Log EOD |
-| `memory_read` / `memory_update` | current_work, shared_context |
-| `learn_tool_fix` | On VPN/calendar/bonfire failures |
-| `skill_run` | cleanup_branches (dry_run) |
+| Tool                            | Purpose                                          |
+| ------------------------------- | ------------------------------------------------ |
+| `persona_load`                  | developer → devops (ephemeral) → developer       |
+| `knowledge_query`               | Project gotchas                                  |
+| `check_known_issues`            | gitlab_mr_list, google_calendar_list_events      |
+| `git_log`                       | Today's commits, weekly stats (oneline, numstat) |
+| `git_status`                    | automation-analytics-backend, redhat-ai-workflow |
+| `git_branch_list`               | Branches merged into main                        |
+| `gitlab_mr_list`                | Merged PRs, my open PRs                          |
+| `bonfire_namespace_list`        | Ephemeral namespaces (mine)                      |
+| `google_calendar_list_events`   | Tomorrow's schedule (days=2)                     |
+| `memory_session_log`            | Log EOD                                          |
+| `memory_read` / `memory_update` | current_work, shared_context                     |
+| `learn_tool_fix`                | On VPN/calendar/bonfire failures                 |
+| `skill_run`                     | cleanup_branches (dry_run)                       |
 
 ## Repos
 

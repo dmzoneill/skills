@@ -9,30 +9,34 @@ Applies deterministic fixes to high-confidence findings. Run `slop_scan` or `slo
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `dry_run` | bool | false | Preview changes without applying |
-| `min_confidence` | float | 0.90 | Minimum confidence (0.0-1.0) |
-| `limit` | int | 20 | Max findings to fix per run |
-| `commit` | bool | true | Commit changes to git |
+| Input            | Type  | Default | Purpose                          |
+| ---------------- | ----- | ------- | -------------------------------- |
+| `dry_run`        | bool  | false   | Preview changes without applying |
+| `min_confidence` | float | 0.90    | Minimum confidence (0.0-1.0)     |
+| `limit`          | int   | 20      | Max findings to fix per run      |
+| `commit`         | bool  | true    | Commit changes to git            |
 
 ## Workflow
 
 ### 1. Check Database
+
 - Verify `~/.config/aa-workflow/slop.db` exists
 - Query: `SELECT COUNT(*) FROM findings WHERE status = 'open'`
 - If no DB or 0 findings: output "No open findings" and skip
 
 ### 2. Get Fixable Findings
+
 - Call `slop_fixable` MCP tool (if available) with `min_confidence`, `limit`
 - Or query DB for findings with confidence >= min_confidence
 
 ### 3. Apply Fixes
+
 - Call `slop_fix` MCP tool (if available) with:
   - `dry_run`, `min_confidence`, `limit`, `commit`
 - Or run slop fix CLI if tool not available
 
 ### 4. Log Session
+
 - `memory_session_log("Slop auto-fix completed", "Dry run" or "Applied fixes")`
 
 ### 5. Output Format
@@ -41,15 +45,19 @@ Applies deterministic fixes to high-confidence findings. Run `slop_scan` or `slo
 ## Slop Auto-Fix Results
 
 ### Database Status
+
 <db_status>
 
 ### Fixable Findings
+
 <fixable_list>
 
 ### Fix Results
+
 <fix_result>
 
 ---
+
 Run with `dry_run=true` to preview changes before applying.
 ```
 

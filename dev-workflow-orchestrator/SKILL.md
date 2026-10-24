@@ -9,21 +9,24 @@ Routes common developer tasks to appropriate skills.
 
 ## Inputs
 
-| Input | Type | Required | Purpose |
-|-------|------|----------|---------|
-| `action` | string | yes | "start", "check", "prepare_mr", "monitor", "standup", "review" |
-| `issue_key` | string | no | Jira key (required for start, check, prepare_mr, review) |
-| `repo` | string | no | Repository path |
+| Input       | Type   | Required | Purpose                                                        |
+| ----------- | ------ | -------- | -------------------------------------------------------------- |
+| `action`    | string | yes      | "start", "check", "prepare_mr", "monitor", "standup", "review" |
+| `issue_key` | string | no       | Jira key (required for start, check, prepare_mr, review)       |
+| `repo`      | string | no       | Repository path                                                |
 
 ## Workflow
 
 ### 1. Load Persona
+
 - `persona_load("developer")`
 
 ### 2. Route Action
+
 - Validate action in ["start", "check", "prepare_mr", "monitor", "standup", "review"]
 
 ### 3. Execute by Action
+
 - **start**: `skill_run("start_work", '{"issue_key": "..."}')` — create branch, Jira context
 - **check**: Run local lint/tests, `check_ci_health` — deploy readiness
 - **prepare_mr**: `skill_run("create_mr", '{"issue_key": "..."}')` — prepare merge request
@@ -32,13 +35,16 @@ Routes common developer tasks to appropriate skills.
 - **review**: `skill_run("check_mr_feedback", ...)`, handle review feedback
 
 ### 4. Detect Failures
+
 - Check for "no such host", "connection refused" → suggest `vpn_connect()`
 - Check for "unauthorized" → suggest credential refresh
 
 ### 5. Learn from Failures
+
 - `learn_tool_fix(...)` if patterns detected
 
 ### 6. Log Session
+
 - `memory_session_log("Dev workflow: {action}", "issue=... success=...")`
 
 ## Output

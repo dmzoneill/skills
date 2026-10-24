@@ -14,13 +14,16 @@ None.
 ## Workflow
 
 ### 1. Generate Greeting
+
 - Format: `🌍 Hello World!\n\nTimestamp: {YYYY-MM-DD HH:MM:SS TZ}\n\nThe cron scheduler is working!`
 - Use `datetime.now(ZoneInfo("Europe/Dublin"))` for timestamp
 
 ### 2. Log
+
 - `memory_session_log("Hello World skill executed", "Cron test at {timestamp}")`
 
 ### 3. Output
+
 - Return greeting as summary
 
 ## Notes

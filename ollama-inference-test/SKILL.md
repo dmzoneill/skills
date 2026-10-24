@@ -9,12 +9,12 @@ Test and benchmark local Ollama inference server.
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `action` | string | status | status, benchmark, test |
-| `model` | string | llama3.2:3b | Model for testing |
-| `prompt` | string | "Explain Kubernetes pods..." | Test prompt |
-| `instances` | string | 3 | Benchmark iterations |
+| Input       | Type   | Default                      | Purpose                 |
+| ----------- | ------ | ---------------------------- | ----------------------- |
+| `action`    | string | status                       | status, benchmark, test |
+| `model`     | string | llama3.2:3b                  | Model for testing       |
+| `prompt`    | string | "Explain Kubernetes pods..." | Test prompt             |
+| `instances` | string | 3                            | Benchmark iterations    |
 
 ## Persona
 
@@ -23,33 +23,41 @@ Test and benchmark local Ollama inference server.
 ## Workflow
 
 ### 1. Load Persona
+
 - `persona_load("developer")`
 
 ### 2. Check Status
+
 - `ollama_status()` — server status
 - `systemctl_status(unit="ollama.service")` — service
 - `ollama_test()` — connectivity and models
 
 ### 3. Restart if Needed
+
 - If not running and action in [test, benchmark]: `systemctl_restart(unit="ollama.service")`
 
 ### 4. Inference Tests (test or benchmark)
+
 - `ollama_generate(model=inputs.model, prompt=inputs.prompt)`
 - `ollama_classify(text="This PR fixes a critical security vulnerability...", labels="bug_fix,feature,security,refactor,docs")`
 
 ### 5. Benchmark (if action=benchmark)
+
 - `curl_timing(url="http://localhost:11434/api/generate")` — response time
 
 ### 6. Parse Results
+
 - Check generate/classify output for errors
 - Extract timing from benchmark
 
 ### 7. Failure Learning
+
 - If connection refused: `learn_tool_fix("ollama_status", "connection refused", "Ollama not running", "systemctl_restart ollama.service")`
 - If model not found: `learn_tool_fix("ollama_generate", "model not found", "Model not downloaded", "ollama_pull(model=...)")`
 - If OOM: `learn_tool_fix("ollama_generate", "out of memory", "Not enough GPU/RAM", "Use smaller model")`
 
 ### 8. Log
+
 - `memory_session_log("Ollama inference test: {action}", "model={model}, passed={passed}")`
 
 ## MCP Tools
@@ -60,7 +68,7 @@ Test and benchmark local Ollama inference server.
 
 ## Quick Examples
 
-```
+```text
 skill_run("ollama_inference_test", '{"action": "status"}')
 skill_run("ollama_inference_test", '{"action": "benchmark", "model": "llama3.2:3b"}')
 ```

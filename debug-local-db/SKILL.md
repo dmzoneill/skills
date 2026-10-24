@@ -9,23 +9,26 @@ Debug database issues in local or ephemeral environments. Uses Podman (not Docke
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `database` | string | "local" | local, ephemeral, workflow |
-| `issue_description` | string | "" | Issue description |
-| `dump_schema` | bool | false | Dump full schema for analysis |
+| Input               | Type   | Default | Purpose                       |
+| ------------------- | ------ | ------- | ----------------------------- |
+| `database`          | string | "local" | local, ephemeral, workflow    |
+| `issue_description` | string | ""      | Issue description             |
+| `dump_schema`       | bool   | false   | Dump full schema for analysis |
 
 ## Workflow
 
 ### 1. Bootstrap
+
 - `persona_load("developer")` — database and Podman tools
 - `check_known_issues("psql")`, `check_known_issues("podman")`, `check_known_issues("database")`
 
 ### 2. Podman Container Checks
+
 - `podman_logs(container="postgres")` — database logs
 - `podman_exec(container="postgres", command="psql --version")` — PostgreSQL version
 
 ### 3. PostgreSQL Checks
+
 - `psql_connections()` — active connections
 - `psql_activity()` — current activity
 - `psql_locks()` — lock contention
@@ -37,22 +40,26 @@ Debug database issues in local or ephemeral environments. Uses Podman (not Docke
 - If `dump_schema`: `pg_dump()` — full schema dump
 
 ### 4. SQLite (if database == "workflow")
+
 - `sqlite_tables()` — tables
 - `sqlite_schema()` — schema
 - `sqlite_query("SELECT name, type FROM sqlite_master WHERE type='table' ORDER BY name;")` — basic stats
 - `sqlite_vacuum()` — vacuum
 
 ### 5. Analysis
+
 - Check lock contention in locks output
 - Flag long-running queries (>5s)
 - Check container logs for "fatal" or "error"
 - Parse connection count; flag if > 50
 
 ### 6. Failure Learning
+
 - "connection refused" → `learn_tool_fix("psql_connections", "connection refused", "PostgreSQL not running", "Start with podman start postgres")`
 - "no such container" → `learn_tool_fix("podman_logs", "no such container", "Container does not exist", "Create with podman run -d --name postgres postgres:latest")`
 
 ### 7. Memory
+
 - `memory_session_log("Debug local database ({database})", "healthy=X, issues=Y")`
 
 ## Key MCP Tools

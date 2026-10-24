@@ -9,35 +9,30 @@ Notify the team Slack channel about an MR ready for review.
 
 ## Inputs
 
-| Input          | Type   | Required | Purpose                      |
-| -------------- | ------ | -------- | ---------------------------- |
-| `mr_id`        | string | yes      | GitLab MR IID (e.g. 1459)    |
-| `project`      | string | no       | GitLab project path          |
-| `issue_key`    | string | no       | Jira key for context         |
-| `message`      | string | no       | Custom message               |
-| `reminder`     | bool   | false    | Format as reminder vs new MR |
-| `slack_format` | bool   | false    | Slack link format            |
+| Input | Type | Required | Purpose |
+|-------|------|----------|---------|
+| `mr_id` | string | yes | GitLab MR IID (e.g. 1459) |
+| `project` | string | no | GitLab project path |
+| `issue_key` | string | no | Jira key for context |
+| `message` | string | no | Custom message |
+| `reminder` | bool | false | Format as reminder vs new MR |
+| `slack_format` | bool | false | Slack link format |
 
 ## Workflow
 
 ### 1. Load Persona
-
 - `persona_load("developer")`
 
 ### 2. Resolve Project
-
 - Use `project`, session project, or default from config (`repositories` → `gitlab`)
 
 ### 3. Fetch MR Details
-
 - `gitlab_mr_view(project, mr_id)` — title, url, extract issue key from title
 
 ### 4. Fetch Jira (if issue_key)
-
 - `jira_view_issue(issue_key)` — summary for context
 
 ### 5. Build Message
-
 - Team mention: `@aa-api-team` (from config `slack.channels.team.group_handle`)
 - Lines: "🔀 Please review:" or "⏰ Reminder - Please review:"
 - Jira link: `<jira_url/browse/{key}|{key}: {summary}>`
@@ -45,12 +40,10 @@ Notify the team Slack channel about an MR ready for review.
 - Custom message if provided
 
 ### 6. Post to Slack
-
 - `persona_load("slack")` — switch for Slack tools
 - `slack_post_team(text="{message}")`
 
 ### 7. Memory
-
 - `memory_session_log("Notified team about MR !{mr_id}", "Reminder/New, Jira: {issue_key}")`
 
 ## MCP Tools

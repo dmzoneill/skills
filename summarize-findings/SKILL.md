@@ -9,28 +9,24 @@ Creates a structured summary from research session activity.
 
 ## Inputs
 
-| Input            | Type   | Default  | Purpose                                        |
-| ---------------- | ------ | -------- | ---------------------------------------------- |
-| `topic`          | string | required | Topic of research (e.g., "caching strategies") |
-| `conclusion`     | string | -        | Your conclusion or recommendation              |
-| `save_to_memory` | bool   | true     | Save summary to memory for future reference    |
+| Input | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `topic` | string | required | Topic of research (e.g., "caching strategies") |
+| `conclusion` | string | - | Your conclusion or recommendation |
+| `save_to_memory` | bool | true | Save summary to memory for future reference |
 
 ## Workflow
 
 ### 1. Get Session Logs
-
 - Read `memory/sessions/{today}.yaml` — last 20 entries
 - Or use `memory_read` / session log APIs if available
 
 ### 2. Filter Research Entries
-
 - Include entries where action contains: research, search, compare, explain, plan
 - Or topic appears in action/details
 
 ### 3. Build Summary
-
 Output markdown with:
-
 - **Research Summary: {topic}**
 - **Date**
 - **Research Activity**: timestamped actions from filtered entries
@@ -40,13 +36,11 @@ Output markdown with:
 - **References**: links placeholder
 
 ### 4. Save to Memory (if save_to_memory)
-
 - Append to `memory/learned/research_summaries.yaml`
 - Entry: topic, date, conclusion, activity_count
 - Keep last 50 summaries
 
 ### 5. Log
-
 - `memory_session_log("Created research summary: {topic}", "Conclusion: {conclusion[:100]}")`
 
 ## Key MCP Tools

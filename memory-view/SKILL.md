@@ -9,18 +9,17 @@ Shows current work state, learned patterns, follow-ups, and environment status. 
 
 ## Inputs
 
-| Input               | Type   | Default  | Purpose                                                |
-| ------------------- | ------ | -------- | ------------------------------------------------------ |
-| `section`           | string | "all"    | all, work, followups, environments, patterns, sessions |
-| `action`            | string | -        | clear_completed, add_followup, clear_old_sessions      |
-| `followup_text`     | string | -        | For add_followup action                                |
-| `followup_priority` | string | "normal" | high, medium, normal                                   |
-| `slack_format`      | bool   | false    | Use `<url\|text>` links                                |
+| Input | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `section` | string | "all" | all, work, followups, environments, patterns, sessions |
+| `action` | string | - | clear_completed, add_followup, clear_old_sessions |
+| `followup_text` | string | - | For add_followup action |
+| `followup_priority` | string | "normal" | high, medium, normal |
+| `slack_format` | bool | false | Use `<url\|text>` links |
 
 ## Workflow
 
 ### 1. Load Memory via MCP
-
 - `memory_read("state/current_work")` - active issues, open MRs, follow_ups
 - `memory_read("state/environments")` - environment health
 - `memory_read("learned/patterns")` - error patterns
@@ -28,7 +27,6 @@ Shows current work state, learned patterns, follow-ups, and environment status. 
 - List `memory/sessions/*.yaml` - recent session logs (last 5 files)
 
 ### 2. Perform Action (if requested)
-
 - **clear_completed:** Filter `active_issues` (remove Done/Closed/Resolved), filter `open_mrs` (remove merged). Use `memory_update` or write back.
 - **add_followup:** Append to `follow_ups` with task, priority, created. Use `memory_append("state/current_work", "follow_ups", item)`.
 - **clear_old_sessions:** Delete session files older than 7 days from `memory/sessions/`.
@@ -51,31 +49,22 @@ Shows current work state, learned patterns, follow-ups, and environment status. 
 # 🧠 Memory View
 
 ## 📋 Current Work
-
 ### Active Issues (N)
-
 - **AAP-XXXXX** - summary | Status: X | Branch: `branch`
-
 ### Open MRs (N)
-
 - !1234 - title 👀📝
 
 ## 📌 Follow-ups
-
 - 🔴/🟡/⚪ task
 
 ## 🌐 Environment Status
-
 ### ✅/⚠️/❓ stage/production/konflux
 
 ## 💡 Learned Patterns
-
 ## 📜 Recent Sessions
 
 ---
-
 ### Available Actions
-
 - Clear completed: skill_run("memory_view", '{"action": "clear_completed"}')
 - Add follow-up: skill_run("memory_view", '{"action": "add_followup", "followup_text": "..."}')
 ```

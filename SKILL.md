@@ -22,7 +22,7 @@ These are hard-won from production use. Follow them strictly:
 
 Load the **developer** persona first:
 
-```text
+```
 persona_load("developer")
 ```
 
@@ -33,11 +33,9 @@ Tools used: `jira_search`, `jira_view_issue`, `jira_assign`, `jira_transition`, 
 ### Phase 1: Discovery and Filtering
 
 1. **Query Jira for CVEs**:
-
-   ```text
+   ```
    jira_search(jql='"Downstream Component Name" ~ "<component>" AND type = Vulnerability AND resolution = Unresolved ORDER BY created DESC', max_results=50)
    ```
-
    Default component: `automation-analytics-backend`
 
 2. **Fetch latest from origin** with prune to get up-to-date refs.
@@ -87,7 +85,7 @@ If resuming a CVE that already has a branch:
 1. **Resolve Jira username** from config (must be email format, e.g., `user@redhat.com`).
 2. **Assign issue** to current user.
 3. **Set acceptance criteria** if not already present:
-   ```text
+   ```
    * CVE-XXXX vulnerability in <package> is remediated
    * <package> is updated to a version that fixes CVE-XXXX
    * Pipfile and Pipfile.lock are updated with the new version
@@ -114,12 +112,11 @@ This uses a **container-based approach** to resolve package versions with the co
 1. **Read Python version** from the project's Pipfile `[requires]` section.
 
 2. **Map to UBI container image**:
-
-   | Python | Image                                        |
-   | ------ | -------------------------------------------- |
-   | 3.9    | `registry.access.redhat.com/ubi9/python-39`  |
-   | 3.11   | `registry.access.redhat.com/ubi9/python-311` |
-   | 3.12   | `registry.access.redhat.com/ubi9/python-312` |
+   | Python | Image |
+   |--------|-------|
+   | 3.9 | `registry.access.redhat.com/ubi9/python-39` |
+   | 3.11 | `registry.access.redhat.com/ubi9/python-311` |
+   | 3.12 | `registry.access.redhat.com/ubi9/python-312` |
 
 3. **Create temp workspace** in `/tmp/cve-fix-*` with:
    - Minimal Pipfile containing just the target package (and any companion packages)
@@ -182,15 +179,14 @@ When `dry_run` is true, show what would be done without making any changes. Disp
 
 Present results as a markdown table:
 
-| Status         | Count | Issues  |
-| -------------- | ----- | ------- |
-| Merged to main | N     | AAP-... |
-| Has Open MR    | N     | AAP-... |
-| Resumable      | N     | AAP-... |
-| Needs Work     | N     | AAP-... |
+| Status | Count | Issues |
+|--------|-------|--------|
+| Merged to main | N | AAP-... |
+| Has Open MR | N | AAP-... |
+| Resumable | N | AAP-... |
+| Needs Work | N | AAP-... |
 
 For each processed CVE, show:
-
 - Issue key, CVE ID, package, severity, CVSS
 - Branch name, Python version
 - Pipfile changes (old version -> new version)

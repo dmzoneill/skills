@@ -9,28 +9,32 @@ Saves error patterns to memory for future debugging sessions.
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `pattern` | string | required | Short name (e.g., "OOMKilled", "ImagePullBackOff") |
-| `meaning` | string | required | What the error means |
-| `fix` | string | required | How to fix it |
-| `commands` | string | - | Comma-separated diagnosis commands |
-| `category` | string | "general" | pod_errors, log_patterns, network, general |
+| Input      | Type   | Default   | Purpose                                            |
+| ---------- | ------ | --------- | -------------------------------------------------- |
+| `pattern`  | string | required  | Short name (e.g., "OOMKilled", "ImagePullBackOff") |
+| `meaning`  | string | required  | What the error means                               |
+| `fix`      | string | required  | How to fix it                                      |
+| `commands` | string | -         | Comma-separated diagnosis commands                 |
+| `category` | string | "general" | pod_errors, log_patterns, network, general         |
 
 ## Workflow
 
 ### 1. Validate Inputs
+
 - pattern, meaning, fix required
 - Return error if any missing
 
 ### 2. Parse Commands
+
 - Split by comma, strip whitespace
 
 ### 3. Optional: Validate Tool Names
+
 - If commands provided: check tool names exist in MCP registry
 - Warn if CLI commands (kubectl, oc) — suggest MCP tools
 
 ### 4. Save Pattern
+
 - Read `memory/learned/patterns.yaml`
 - Ensure category exists
 - Build entry: pattern, meaning, fix, commands (if any)
@@ -38,9 +42,11 @@ Saves error patterns to memory for future debugging sessions.
 - Write back with last_updated
 
 ### 5. Log (if success)
+
 - `memory_session_log("Learned pattern: {pattern}", "Category: {category}, Action: added|updated")`
 
 ### 6. Output
+
 - Success: "Pattern added/updated", details, "Will be matched during investigate_alert and debug_prod"
 - Failure: validation error or save error
 

@@ -7,23 +7,26 @@ description: Get overall Konflux build system status - applications, running pip
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `namespace` | string | aap-aa-tenant | Konflux namespace |
-| `application` | string | "" | Specific application to check (optional) |
+| Input         | Type   | Default       | Purpose                                  |
+| ------------- | ------ | ------------- | ---------------------------------------- |
+| `namespace`   | string | aap-aa-tenant | Konflux namespace                        |
+| `application` | string | ""            | Specific application to check (optional) |
 
 ## Workflow
 
 ### 1. Bootstrap
+
 - `persona_load("release")` — konflux tools
 - `check_known_issues("konflux", "")`, `check_known_issues("tekton", "")`
 - `knowledge_query(project="automation-analytics-backend", persona="devops", section="patterns.deployment")`
 
 ### 2. Application Details (if application specified)
+
 - `konflux_get_application(name="{application}", namespace="{namespace}")`
 - `konflux_list_environments(namespace="{namespace}")`
 
 ### 3. Status Queries
+
 - `konflux_status(namespace="{namespace}")` — overall health
 - `konflux_list_applications(namespace="{namespace}")` — apps in namespace
 - `konflux_running_pipelines(namespace="{namespace}")` — active pipelines
@@ -31,12 +34,14 @@ description: Get overall Konflux build system status - applications, running pip
 - `konflux_namespace_summary(namespace="{namespace}")` — summary
 
 ### 4. Parse & Report
+
 - Parse status: healthy if "healthy" or "ready" in output
 - Parse applications list
 - Parse running/failed pipeline counts
 - Log: `memory_session_log("Checked Konflux status", "namespace={ns}, healthy={status}")`
 
 ### 5. Failure Learning
+
 - Unauthorized → `learn_tool_fix("konflux_get_status", "unauthorized", "K8s auth expired", "Run kube_login(cluster='konflux')")`
 - No route to host → `learn_tool_fix("konflux_get_status", "no route to host", "VPN not connected", "Run vpn_connect()")`
 
@@ -53,7 +58,7 @@ description: Get overall Konflux build system status - applications, running pip
 
 ## Useful Follow-up Commands
 
-```
+```text
 konflux_get_application(name='<app>', namespace='aap-aa-tenant')
 konflux_list_snapshots(namespace='aap-aa-tenant')
 konflux_list_integration_tests(namespace='aap-aa-tenant')

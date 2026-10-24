@@ -9,17 +9,19 @@ Export a Google Slides presentation to PDF format.
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `presentation_id` | string | required | Presentation ID to export |
-| `output_path` | string | - | Output file path (default: uses title) |
+| Input             | Type   | Default  | Purpose                                |
+| ----------------- | ------ | -------- | -------------------------------------- |
+| `presentation_id` | string | required | Presentation ID to export              |
+| `output_path`     | string | -        | Output file path (default: uses title) |
 
 ## Workflow
 
 ### 1. Export
+
 - `google_slides_export_pdf(presentation_id=id, output_path=output_path or "")`
 
 ### 2. Post-Action
+
 - `memory_session_log("Exported presentation to PDF", "ID: {presentation_id}")`
 
 ## Output
@@ -30,6 +32,7 @@ Export a Google Slides presentation to PDF format.
 {export_result}
 
 ### Next Steps
+
 - Share the PDF file
 - Upload to document storage
 - Attach to Jira issue or Slack message

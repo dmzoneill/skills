@@ -9,17 +9,19 @@ Query Google Drive for presentation files. Returns IDs and links for editing or 
 
 ## Inputs
 
-| Input | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `search` | string | - | Filter by name |
-| `max_results` | int | 20 | Max presentations to return |
+| Input         | Type   | Default | Purpose                     |
+| ------------- | ------ | ------- | --------------------------- |
+| `search`      | string | -       | Filter by name              |
+| `max_results` | int    | 20      | Max presentations to return |
 
 ## Workflow
 
 ### 1. List
+
 - `google_slides_list(max_results=max_results, search_query=search or "")`
 
 ### 2. Post-Action
+
 - `memory_session_log("Skill completed")`
 
 ## Output
@@ -30,6 +32,7 @@ Query Google Drive for presentation files. Returns IDs and links for editing or 
 {list_result}
 
 ### Actions
+
 - **View details:** google_slides_get("PRESENTATION_ID")
 - **Create new:** skill_run("create_slide_deck", '{"title": "My Presentation"}')
 - **Export PDF:** google_slides_export_pdf("PRESENTATION_ID")

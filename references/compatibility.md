@@ -8,10 +8,10 @@ Known compatibility requirements discovered from production CVE fix issues. **Ch
 
 urllib3 2.x removed `DEFAULT_CIPHERS` which older boto3/botocore versions import.
 
-| Companion Package | Minimum Version | Reason |
-|-------------------|-----------------|--------|
-| boto3 | >= 1.34.46 | urllib3 2.x removed DEFAULT_CIPHERS |
-| botocore | >= 1.34.46 | urllib3 2.x removed DEFAULT_CIPHERS |
+| Companion Package | Minimum Version | Reason                              |
+| ----------------- | --------------- | ----------------------------------- |
+| boto3             | >= 1.34.46      | urllib3 2.x removed DEFAULT_CIPHERS |
+| botocore          | >= 1.34.46      | urllib3 2.x removed DEFAULT_CIPHERS |
 
 ## aiohttp
 
@@ -19,9 +19,9 @@ urllib3 2.x removed `DEFAULT_CIPHERS` which older boto3/botocore versions import
 
 aiohttp 3.9+ changed the `AIOHTTPTransport` API used by gql.
 
-| Companion Package | Minimum Version | Reason |
-|-------------------|-----------------|--------|
-| gql | >= 3.5.0 | aiohttp 3.9+ changed AIOHTTPTransport API |
+| Companion Package | Minimum Version | Reason                                    |
+| ----------------- | --------------- | ----------------------------------------- |
+| gql               | >= 3.5.0        | aiohttp 3.9+ changed AIOHTTPTransport API |
 
 **Note**: aiohttp 3.13+ has additional breaking changes. Test carefully.
 
@@ -31,10 +31,10 @@ aiohttp 3.9+ changed the `AIOHTTPTransport` API used by gql.
 
 gql 3.5+ added new dependencies for retry logic and requests transport.
 
-| Companion Package | Minimum Version | Reason |
-|-------------------|-----------------|--------|
-| backoff | >= 2.2.1 | gql 3.5+ requires backoff for retry logic |
-| requests-toolbelt | >= 1.0.0 | gql[requests] requires requests-toolbelt |
+| Companion Package | Minimum Version | Reason                                    |
+| ----------------- | --------------- | ----------------------------------------- |
+| backoff           | >= 2.2.1        | gql 3.5+ requires backoff for retry logic |
+| requests-toolbelt | >= 1.0.0        | gql[requests] requires requests-toolbelt  |
 
 **Note**: If using `gql[requests]` extra, `requests-toolbelt` is required.
 

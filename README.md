@@ -1,5 +1,9 @@
 # skills
 
+<p align="center">
+  <img src=".github/logo.png" alt="skills logo" width="128" />
+</p>
+
 A collection of agent skills for AI coding assistants. Each skill is a
 `SKILL.md` file with a name, a description of when to use it and the steps to
 follow.
